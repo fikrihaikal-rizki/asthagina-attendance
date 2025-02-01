@@ -1,12 +1,18 @@
 <script setup>
-import Container from './components/Container.vue';
-import Login from './pages/Login.vue';
+import Loading from '@/pages/Loading.vue';
+import { getLoadingState } from '@/composables/loadingState';
+
 </script>
 
 <template>
-  <div class="h-screen content-center gap-6 rounded-lg p-8">
-      <Container>
-        <Login></Login>
-      </Container>
-  </div>
+  <Suspense>
+    <div>
+      <div v-if="!getLoadingState()">
+        <RouterView></RouterView>
+      </div>
+      <div class="flex items-center justify-center h-screen" v-if="getLoadingState()">
+        <Loading></Loading>
+      </div>
+    </div>
+  </Suspense>
 </template>

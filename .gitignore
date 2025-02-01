@@ -131,3 +131,4 @@ dist
 
 #credential
 gsheet.config.json
+firebase.config.json

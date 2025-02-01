@@ -10,7 +10,7 @@ import {
 import { computed } from 'vue';
 
 const props = defineProps({
-  value: { type: String, required: true },
+  value: { type: {String, Object}, required: true },
   disabled: { type: Boolean, required: false },
   textValue: { type: String, required: false },
   asChild: { type: Boolean, required: false },
@@ -39,7 +39,7 @@ const forwardedProps = useForwardProps(delegatedProps);
   >
     <span class="absolute right-2 flex h-3.5 w-3.5 items-center justify-center">
       <SelectItemIndicator>
-        <CheckIcon class="h-4 w-4" />
+        <CheckIcon class="w-4 h-4" />
       </SelectItemIndicator>
     </span>
 
