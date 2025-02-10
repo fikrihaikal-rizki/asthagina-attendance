@@ -10,6 +10,13 @@ import {
 } from '@/components/ui/select'
 import Card from '@/components/ui/card/Card.vue'
 import Label from '@/components/ui/label/Label.vue'
+import { sendRequest } from '@/composables/requestHelper'
+import ScanResultPage from './ScanResult/ScanResultPage.vue'
+import router from '@/router'
+import { setErrorMessage, setErrorState } from '@/composables/errorState'
+import { checkLogin } from '@/composables/authHelper'
+
+checkLogin();
 
 // /*** select camera ***/
 const selectedConstraints = ref({ facingMode: 'environment' })
@@ -19,12 +26,45 @@ const defaultConstraintOptions = [
 ]
 const constraintOptions = ref(defaultConstraintOptions)
 
-const result = ref('')
+const result = ref('');
+const lastResult = ref('');
+const attendance = ref({
+    "Nama Lengkap": "",
+    "Nomor telepon": "",
+    "Email": "",
+    "Alamat Kos": "",
+});
 
-function onDetect(detectedCodes) {
-    console.log(detectedCodes)
-    result.value = JSON.stringify(detectedCodes.map((code) => code.rawValue))
+async function onDetect(detectedCodes) {
+    result.value = JSON.stringify(detectedCodes.map((code) => code.rawValue));
+
+    result.value = JSON.parse(result.value);
+
+    console.log(result.value);
+
+    if (result.value.length > 1) {
+        return;
+    }
+
+    result.value = result.value[0];
+    var checkAttendance = await sendRequest("attendances/take", { qrId: result.value });
+    console.log(checkAttendance);
+    if (!checkAttendance.status) {
+        setErrorState(true);
+        setErrorMessage("Peserta Sudah Absen");
+        return;
+    }
+    if (result.value != lastResult.value) {
+
+
+        attendance.value = checkAttendance.data;
+
+        lastResult.value = result.value;
+        // router.push({name: "scan-result", params: {attendance: checkAttendance.data}});
+    }
 }
+
+
 
 async function onCameraReady() {
     // NOTE: on iOS we can't invoke `enumerateDevices` before the user has given
@@ -160,9 +200,9 @@ function onError(err) {
 </script>
 
 <template>
-    <div>
-        <div class="flex items-center justify-center p-5">
-            <div class="w-[250px]">
+    <div class="flex items-center justify-center p-5 ">
+        <div class="w-[350px]">
+            <div class="w-full p-3">
                 <Label for="cameraSelect">Select Camera :</Label>
                 <Select name="cameraSelect" v-model="selectedConstraints">
                     <SelectTrigger>
@@ -175,16 +215,18 @@ function onError(err) {
                     </SelectContent>
                 </Select>
             </div>
-        </div>
-        <div class="flex items-center justify-center pb-5 h-3/4">
-            <qrcode-stream :constraints="selectedConstraints" :track="trackFunctionSelected.value"
-                :formats="selectedBarcodeFormats" @error="onError" @detect="onDetect" @camera-on="onCameraReady" />
-        </div>
-
-        <div class="flex items-center justify-center p-5">
+            <div class="w-full p-3">
+                <qrcode-stream :constraints="selectedConstraints" :track="trackFunctionSelected.value"
+                    :formats="selectedBarcodeFormats" @error="onError" @detect="onDetect" @camera-on="onCameraReady" />
+            </div>
             <Card class="w-full p-3">
                 Last result: <b>{{ result }}</b>
             </Card>
+            <div class="mt-3">
+                <ScanResultPage :attendance="attendance"></ScanResultPage>
+
+            </div>
         </div>
+
     </div>
 </template>

@@ -10,37 +10,8 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ref } from 'vue';
+import { user, login, clear } from '@/composables/authHelper'
 
-import { firestoreDoc } from '@/composables/initializeFirebase';
-import { setLoadingState } from '@/composables/loadingState';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-
-const user = ref({ username: '', password: '' });
-
-function clear() {
-  user.value.username = '';
-  user.value.password = '';
-}
-
-function validate() {
-
-}
-
-async function login() {
-  setLoadingState(true);
-  const docSnap = await firestoreDoc('Users', user.value.username);
-
-  if (docSnap.exists()) {
-    router.push('/sync');
-  } else {
-    console.log("No such document!");
-  }
-
-  setLoadingState(false);
-}
 </script>
 
 <template>
