@@ -10,7 +10,7 @@ export async function sendRequest(url, body) {
   var result = null;
 
   if (url != "login") {
-    var token = localStorage.getItem("token");
+    var token = localStorage.getItem("user");
     axios.defaults.headers.common = { Authorization: "Bearer " + token };
   }
 

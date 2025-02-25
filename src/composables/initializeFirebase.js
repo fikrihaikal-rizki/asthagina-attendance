@@ -1,31 +1,19 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-// import { fileToJson } from "./fileToJson";
+import { getFirestore } from "firebase/firestore";
 
-export function firebaseApp() {
-  const config = import.meta.env.VITE_FIREBASE_CREDENTIALS;
-  // const firebaseConfig = fileToJson(config);
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+};
 
-  // return initializeApp(firebaseConfig);
-  return initializeApp({
-    apiKey: "AIzaSyAevTnZjDHbP4K5tFiDo4l8bgeiCeSGQRk",
-    authDomain: "shvc-f7e1f.firebaseapp.com",
-    databaseURL: "https://shvc-f7e1f.firebaseio.com",
-    projectId: "shvc-f7e1f",
-    storageBucket: "shvc-f7e1f.firebasestorage.app",
-    messagingSenderId: "280000831313",
-    appId: "1:280000831313:web:d2104166eccf532620fd70"
-  });
-}
+const firebaseApp = initializeApp(firebaseConfig);
 
-export function firestoreDb() {
-  return getFirestore(firebaseApp());
-}
-
-const db = firestoreDb();
-
-export function firestoreDoc(collectionRef, docRef) {
-  const ref = doc(db, collectionRef, docRef);
-  
-  return getDoc(ref);
+export default function () {
+  return getFirestore(firebaseApp);
 }

@@ -1,38 +1,42 @@
 import { ref } from "vue";
-import { firestoreDoc } from "@/composables/initializeFirebase";
 import { setLoadingState } from "@/composables/loadingState";
 import router from "@/router";
 import { sendRequest } from "./requestHelper";
 import { setErrorMessage, setErrorState } from "./errorState";
 
-export const user = ref({ username: "", password: "" });
-export const logon = ref(false);
-// const logonUser = ref({ username: '', session: '' });
-
-export function checkLogin() {
-  var token = localStorage.getItem("token");
-  if (token == null) {
-    router.push("/login");
-  }
-}
+export const loginForm = ref({ username: "", password: "" });
 
 export function clear() {
-  user.value.username = "";
-  user.value.password = "";
+  loginForm.value.username = "";
+  loginForm.value.password = "";
+}
+
+function validate() {
+  if (loginForm.value.username == '' || loginForm.value.password == '') {
+    setErrorState(true);
+    setErrorMessage("username or password cannot be blank");
+    return false;
+  }
+
+  return true;
 }
 
 export async function login() {
+  if (!validate()) {
+    return;
+  }
+  
   setLoadingState(true);
 
-  var users = await sendRequest("login", user.value);
-  if (!users.status) {
+  var user = await sendRequest("login", loginForm.value);
+  if (!user.status) {
     setErrorState(true);
-    setErrorMessage(users.message);
+    setErrorMessage(user.message);
     setLoadingState(false);
     return;
   }
 
-  localStorage.setItem("token", users.data);
+  localStorage.setItem("user", user.data);
 
   setErrorState(false);
   setLoadingState(false);
