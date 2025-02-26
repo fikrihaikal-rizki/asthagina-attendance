@@ -243,7 +243,7 @@ onMounted(() => {
                   as-child
                   @click="doInactiveLink(activeLinks[index].link)"
                 >
-                  <Button class="bg-red-500" @click="openInactiveDialog(true)">
+                  <Button class="bg-red-500">
                     <LinkBreak2Icon class="text-xl" bold />Inactive Link
                   </Button>
                 </AlertDialogAction>
