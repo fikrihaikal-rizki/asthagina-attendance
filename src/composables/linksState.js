@@ -2,18 +2,20 @@ import { ref } from "vue";
 import { sendRequest } from "./requestHelper";
 import { setLoadingState } from "./loadingState";
 import { setErrorMessage, setErrorState } from "./errorState";
+import { setSuccessMessage, setSuccessState } from "./successState";
 
-export const activeLink = ref("");
+export const activeLinks = ref([]);
 export const activeHours = ref(12);
 
 async function getActiveLink() {
   const link = await sendRequest("links/get-active");
 
   if (link.data === undefined) {
+    activeLinks.value = [];
     return;
   }
 
-  activeLink.value = link.data;
+  activeLinks.value = link.data;
 }
 
 export async function initActiveLink() {
@@ -52,4 +54,26 @@ export async function generateLink(revokeAccess) {
 
   await getActiveLink();
   setLoadingState(false);
+  setSuccessState(true);
+  setSuccessMessage("Success genererate link");
+}
+
+export async function inactiveLink(link) {
+  setLoadingState(true);
+  var body = {
+    link: link,
+  };
+
+  const inactive = await sendRequest("links/inactive", body);
+  if (!inactive.status) {
+    setErrorState(true);
+    setErrorMessage(inactive.message);
+    setLoadingState(false);
+    return;
+  }
+
+  await getActiveLink();
+  setLoadingState(false);
+  setSuccessState(true);
+  setSuccessMessage("Success inactive link");
 }
