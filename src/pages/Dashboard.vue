@@ -46,6 +46,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useClipboard } from "@vueuse/core";
+import { initReportDate, reportDate } from "@/composables/reportState.js";
 
 const { copy } = useClipboard();
 
@@ -77,6 +78,7 @@ function doInactiveLink(link) {
 onMounted(() => {
   loadSync();
   initActiveLink();
+  initReportDate();
 });
 </script>
 <template>
@@ -313,29 +315,32 @@ onMounted(() => {
           </AlertDialogContent>
         </AlertDialog>
       </Card>
-      <!-- <p>Laporan Absensi</p> -->
-      <!-- <Card class="w-full p-3">
-                <div class="grid grid-flow-col grid-rows-2">
-                    <div class="col-span-3 row-span-2">
-                        <Select name="dateSelect" v-model="dateSelected">
-                            <SelectTrigger>
-                                <SelectValue placeholder="Pilih Tanggal" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem v-for="option in dateOptions" :key="option.label"
-                                    :value="option.text">
-                                    {{ option.label }}
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div class="flex items-center justify-end row-span-2">
-                        <Button class="bg-green-500">
-                            <SymbolIcon class="text-xl" bold />
-                        </Button>
-                    </div>
-                </div>
-            </Card> -->
+      <!-- <p>Laporan Absensi</p>
+      <Card class="w-full p-3">
+        <div class="grid grid-flow-col grid-rows-2">
+          <div class="col-span-3 row-span-2">
+            <Select name="dateSelect" v-model="dateSelected">
+              <SelectTrigger>
+                <SelectValue placeholder="Pilih Tanggal" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem
+                  v-for="date in reportDate"
+                  :key="date"
+                  :value="date"
+                >
+                  {{ date }}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div class="flex items-center justify-end row-span-2">
+            <Button class="bg-green-500">
+              <SymbolIcon class="text-xl" bold />
+            </Button>
+          </div>
+        </div>
+      </Card> -->
     </div>
   </div>
 </template>

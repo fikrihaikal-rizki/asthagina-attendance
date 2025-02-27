@@ -11,12 +11,6 @@ const router = createRouter({
       component: () => import("@/pages/AttendanceScanner.vue"),
     },
     {
-      name: "scan-result",
-      path: "/scan-result",
-      component: () => import("@/pages/ScanResult/ScanResultPage.vue"),
-      props: route => ({ attendance: route.params }),
-    },
-    {
       name: "not-found",
       path: "/:notFound",
       component: () => import("@/pages/NotFound.vue"),

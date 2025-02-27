@@ -8,13 +8,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Card from "@/components/ui/card/Card.vue";
 import Label from "@/components/ui/label/Label.vue";
 import { sendRequest } from "@/composables/requestHelper";
-import ScanResultPage from "./ScanResult/ScanResultPage.vue";
-import router from "@/router";
 import { setErrorMessage, setErrorState } from "@/composables/errorState";
-
+import ScanResultPage from "./ScanResultPage.vue";
+import { setSuccessMessage, setSuccessState } from "@/composables/successState";
 // /*** select camera ***/
 const selectedConstraints = ref({ facingMode: "environment" });
 const defaultConstraintOptions = [
@@ -48,15 +46,23 @@ async function onDetect(detectedCodes) {
 
   if (!checkAttendance.status) {
     setErrorState(true);
-    setErrorMessage("Peserta Sudah Absen");
+    setErrorMessage(checkAttendance.message);
     return;
   }
+
   if (result.value != lastResult.value) {
     attendance.value = checkAttendance.data;
-
     lastResult.value = result.value;
-    // router.push({name: "scan-result", params: {attendance: checkAttendance.data}});
   }
+
+  if (result.value == lastResult.value) {
+    setSuccessState(true);
+    setSuccessMessage("Peserta sebelumnya sudah di absen");
+    return;
+  }
+
+  setSuccessState(true);
+  setSuccessMessage("Peserta berhasil absen");
 }
 
 async function onCameraReady() {
