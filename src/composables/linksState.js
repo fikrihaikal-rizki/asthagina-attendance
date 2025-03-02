@@ -6,6 +6,13 @@ import { setSuccessMessage, setSuccessState } from "./successState";
 
 export const activeLinks = ref([]);
 export const activeHours = ref(12);
+export const linkForm = ref({
+  date: "",
+  startDate: "",
+  startTime: "00:00",
+  duration: 12,
+  revokePrevious: false,
+});
 
 async function getActiveLink() {
   const link = await sendRequest("links/get-active");
@@ -29,22 +36,16 @@ export async function pullActiveLink() {
 }
 
 export async function generateLink(revokeAccess) {
+  var newLinkForm = {};
+  newLinkForm.date = linkForm.value.date;
+  newLinkForm.duration = linkForm.value.duration;
+  newLinkForm.startDate =
+    linkForm.value.startDate + " " + linkForm.value.startTime + ":00";
+  newLinkForm.revokePrevious = revokeAccess;
+
   setLoadingState(true);
 
-  const date = new Date();
-  var month = date.getMonth() + 1;
-  month = month.toString().padStart(2, "0");
-  var dayDate = date.getDate();
-  dayDate = dayDate.toString().padStart(2, "0");
-  var newDate = date.getFullYear() + "-" + month + "-" + dayDate;
-
-  var body = {
-    date: newDate,
-    duration: activeHours.value,
-    revokePrevious: revokeAccess,
-  };
-
-  const generate = await sendRequest("links/generate", body);
+  const generate = await sendRequest("links/generate", newLinkForm);
   if (!generate.status) {
     setErrorState(true);
     setErrorMessage(generate.message);
@@ -76,4 +77,13 @@ export async function inactiveLink(link) {
   setLoadingState(false);
   setSuccessState(true);
   setSuccessMessage("Success inactive link");
+}
+
+function tadayDate() {
+  const date = new Date();
+  var month = date.getMonth() + 1;
+  month = month.toString().padStart(2, "0");
+  var dayDate = date.getDate();
+  dayDate = dayDate.toString().padStart(2, "0");
+  return date.getFullYear() + "-" + month + "-" + dayDate;
 }

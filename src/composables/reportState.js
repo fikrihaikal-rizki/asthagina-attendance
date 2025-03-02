@@ -11,7 +11,6 @@ async function getReportDate() {
     return;
   }
 
-  console.log(date.data);
   reportDate.value = date.data;
 }
 
