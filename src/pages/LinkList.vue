@@ -92,6 +92,7 @@ function doInactiveLink(link) {
                     <Input
                       :id="'date_' + index"
                       v-model="activeLinks[index].date"
+                      readonly
                     />
                   </div>
                   <div class="flex flex-col space-y-1.5">
@@ -99,6 +100,7 @@ function doInactiveLink(link) {
                     <Input
                       :id="'startDate_' + index"
                       v-model="activeLinks[index].startDate"
+                      readonly
                     />
                   </div>
                   <div class="flex flex-col space-y-1.5">
@@ -106,6 +108,7 @@ function doInactiveLink(link) {
                     <Input
                       :id="'endDate_' + index"
                       v-model="activeLinks[index].endDate"
+                      readonly
                     />
                   </div>
                 </div>

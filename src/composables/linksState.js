@@ -5,7 +5,6 @@ import { setErrorMessage, setErrorState } from "./errorState";
 import { setSuccessMessage, setSuccessState } from "./successState";
 
 export const activeLinks = ref([]);
-export const activeHours = ref(12);
 export const linkForm = ref({
   date: "",
   startDate: "",
@@ -77,13 +76,4 @@ export async function inactiveLink(link) {
   setLoadingState(false);
   setSuccessState(true);
   setSuccessMessage("Success inactive link");
-}
-
-function tadayDate() {
-  const date = new Date();
-  var month = date.getMonth() + 1;
-  month = month.toString().padStart(2, "0");
-  var dayDate = date.getDate();
-  dayDate = dayDate.toString().padStart(2, "0");
-  return date.getFullYear() + "-" + month + "-" + dayDate;
 }

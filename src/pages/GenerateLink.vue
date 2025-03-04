@@ -20,7 +20,7 @@ import Card from "@/components/ui/card/Card.vue";
 import Input from "@/components/ui/input/Input.vue";
 import Label from "@/components/ui/label/Label.vue";
 import { Link1Icon } from "@radix-icons/vue";
-import { activeHours, generateLink, linkForm } from "@/composables/linksState";
+import { generateLink, linkForm } from "@/composables/linksState";
 import { ref } from "vue";
 import Button from "@/components/ui/button/Button.vue";
 import DatePicker from "@/components/DatePicker.vue";

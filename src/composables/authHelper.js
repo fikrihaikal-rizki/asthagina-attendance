@@ -45,3 +45,16 @@ export async function login() {
   setLoadingState(false);
   router.push("/");
 }
+
+export function getRole() {
+  var role = localStorage.getItem("user");
+  role = role.slice(role.length - 16);
+  var decode = Buffer.from(role, "base64").toString("ascii");
+
+  return decode.toString().replaceAll("0", "");;
+}
+
+export function getToken() {
+  var token = localStorage.getItem("user");
+  return token.slice(0, token.length - 16);
+}
